@@ -15,7 +15,7 @@ const Routes = () => {
   return (
     <Layout>
       <Switch>
-        <Route path="/" exact component={IsAuth(ViewContainer)} />
+        <Route path="/" exact component={IsAuth(Home)} />
         <Route path="/upload" exact component={IsAuth(UploadVideo)} />
         <Route path="/login" exact component={Login} />
         <Route path="/signup" exact component={SignUp} />
