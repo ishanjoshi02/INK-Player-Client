@@ -29,7 +29,9 @@ class View extends Component {
     firstVideo: false,
     description: "",
     username: "",
-    audio: false
+    audio: false,
+    playing: false,
+    time: 0
   };
 
   componentWillMount() {
@@ -76,15 +78,41 @@ class View extends Component {
 
   componentDidMount() {
     this.getVidInfo();
+    console.log(this.player);
+  }
+
+  componentDidUpdate() {
+    console.log(this.player);
+    const { time } = this.state;
+    if (time !== 0) {
+      if (this.state.audio) {
+        this.player.currentTime = time;
+        this.player.play();
+      } else {
+        this.player.seekTo(time, "seconds");
+      }
+    }
   }
 
   componentWillReceiveProps = nextProps => {
-    const { audio } = nextProps;
-    this.setState({ audio });
+    const { audio, time } = nextProps;
+    this.setState({ audio, time });
   };
 
   toggleMode = () => {
-    this.props.dispatch(toggleMode());
+    // Get time from ref
+    let time;
+    if (this.state.audio) {
+      time = this.player.currentTime;
+    } else {
+      time = this.player.getCurrentTime();
+    }
+    this.setState({ playing: true });
+    this.props.dispatch(toggleMode(time));
+  };
+
+  ref = player => {
+    this.player = player;
   };
 
   render() {
@@ -97,13 +125,15 @@ class View extends Component {
             <Card className={classes.card}>
               <CardContent>
                 {this.state.audio ? (
-                  <audio controls>
-                    <source
-                      src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
-                    />
-                  </audio>
+                  <audio
+                    ref={this.ref}
+                    src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
+                    controls
+                  />
                 ) : (
                   <ReactPlayer
+                    ref={this.ref}
+                    playing={this.state.playing}
                     url={`https://ipfs.io/ipfs/${this.state.vidHash}`}
                     controls={true}
                   />
@@ -145,9 +175,10 @@ View.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state);
+  const { time, audio } = state.videos;
   return {
-    audio: state.videos.audio
+    time,
+    audio
   };
 };
 

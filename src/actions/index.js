@@ -128,8 +128,11 @@ export function getAudioStatus() {
     type: "AUDIO_STATUS"
   };
 }
-export function toggleMode() {
+export function toggleMode(time) {
   return {
-    type: "TOGGLE_MODE"
+    type: "TOGGLE_MODE",
+    payload: {
+      time
+    }
   };
 }

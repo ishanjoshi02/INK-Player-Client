@@ -5,8 +5,10 @@ export default (state, action) => {
     }
     case "TOGGLE_MODE": {
       let { audio } = state;
+      const { time } = action.payload;
       return {
-        audio: !audio
+        audio: !audio,
+        time
       };
     }
     default: {
