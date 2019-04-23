@@ -20,7 +20,7 @@ const Routes = () => {
         <Route path="/login" exact component={Login} />
         <Route path="/signup" exact component={SignUp} />
         <Route path="/view/:id" exact component={View} />
-        <Route path="/profile" exact component={ProfileContainer} />
+        <Route path="/profile" exact component={IsAuth(ProfileContainer)} />
         <Route path="/edit" exact component={IsAuth(EditContainer)} />
       </Switch>
     </Layout>

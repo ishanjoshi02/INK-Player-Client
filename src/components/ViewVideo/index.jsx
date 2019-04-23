@@ -5,13 +5,10 @@ import { withStyles } from "@material-ui/core/styles";
 import {
   Typography,
   CardContent,
-  CardActionArea,
   Card,
-  Grid,
   Button,
   CardMedia
 } from "@material-ui/core/";
-import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { getAudioStatus, toggleMode } from "../../actions";
 import { connect } from "react-redux";
@@ -123,7 +120,7 @@ class View extends Component {
         {firstVideo ? (
           <React.Fragment>
             <Card className={classes.card}>
-              <CardContent>
+              <CardContent className={classes.content}>
                 {this.state.audio ? (
                   <audio
                     ref={this.ref}
@@ -131,11 +128,11 @@ class View extends Component {
                     controls
                   />
                 ) : (
-                  <ReactPlayer
-                    ref={this.ref}
-                    playing={this.state.playing}
-                    url={`https://ipfs.io/ipfs/${this.state.vidHash}`}
-                    controls={true}
+                  <CardMedia
+                    controls
+                    component="video"
+                    src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
+                    title={this.state.title}
                   />
                 )}
                 <Typography gutterBottom variant="h5" component="h2">

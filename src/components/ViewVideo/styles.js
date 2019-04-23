@@ -1,9 +1,11 @@
 const styles = {
   card: {
-    maxWidth: 650
+    maxWidth: 360,
+    display: "flex",
+    flexDirection: "column"
   },
   uploader: {
-    fontSize: "32px",
+    fontSize: "20px",
     float: "right"
   },
   buttonPos: {
