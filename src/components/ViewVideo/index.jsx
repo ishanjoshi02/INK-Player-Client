@@ -75,19 +75,14 @@ class View extends Component {
 
   componentDidMount() {
     this.getVidInfo();
-    console.log(this.player);
   }
 
   componentDidUpdate() {
     console.log(this.player);
     const { time } = this.state;
     if (time !== 0) {
-      if (this.state.audio) {
-        this.player.currentTime = time;
-        this.player.play();
-      } else {
-        this.player.seekTo(time, "seconds");
-      }
+      this.player.currentTime = time;
+      this.player.play();
     }
   }
 
@@ -97,15 +92,8 @@ class View extends Component {
   };
 
   toggleMode = () => {
-    // Get time from ref
-    let time;
-    if (this.state.audio) {
-      time = this.player.currentTime;
-    } else {
-      time = this.player.getCurrentTime();
-    }
     this.setState({ playing: true });
-    this.props.dispatch(toggleMode(time));
+    this.props.dispatch(toggleMode(this.player.currentTime));
   };
 
   ref = player => {
@@ -128,12 +116,15 @@ class View extends Component {
                     controls
                   />
                 ) : (
-                  <CardMedia
-                    controls
-                    component="video"
-                    src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
-                    title={this.state.title}
-                  />
+                  <CardMedia className={classes.card}>
+                    <video
+                      controls
+                      ref={this.ref}
+                      component="video"
+                      src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
+                      title={this.state.title}
+                    />
+                  </CardMedia>
                 )}
                 <Typography gutterBottom variant="h5" component="h2">
                   {this.state.title}
