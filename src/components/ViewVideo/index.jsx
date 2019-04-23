@@ -19,6 +19,9 @@ const Web3 = require("web3");
 const VideoStoreArtifact = require("../../contracts/VideoStore.json");
 const VideoStore = TruffleContract(VideoStoreArtifact);
 
+const UserStoreArtifact = require("../../contracts/UserStore.json");
+const UserStore = TruffleContract(UserStoreArtifact);
+
 class View extends Component {
   state = {
     vidHash: "",
@@ -28,11 +31,11 @@ class View extends Component {
     username: "",
     audio: false,
     playing: false,
+    uploaderEmail: "",
     time: 0
   };
 
   componentWillMount() {
-    console.log(this.props);
     this.props.dispatch(getAudioStatus());
     const { audio } = this.props;
     this.setState({ audio });
@@ -43,22 +46,36 @@ class View extends Component {
       const { id } = this.props.match.params;
       const web3 = new Web3(window.web3.currentProvider);
       VideoStore.setProvider(web3.currentProvider);
-      const instance = VideoStore.at(
-        `0x90154d3e6bcf0eb951b501eca479c1224fb125c6`
-      ).then(vidInst => {
-        const accounts = web3.eth.getAccounts().then(accInst => {
-          const vidInfo = vidInst.getVideo.call(id).then(
-            res => {
-              console.log(res);
-              this.setData(res["hash"], res["title"], res["description"]);
-              this.setState({ username: res[7] });
-            },
-            err => {
-              console.log(err);
-            }
-          );
-        });
-      });
+      VideoStore.at(`0x90154d3e6bcf0eb951b501eca479c1224fb125c6`).then(
+        vidInst => {
+          web3.eth.getAccounts().then(accInst => {
+            vidInst.getVideo.call(id).then(
+              res => {
+                console.log(res);
+                this.setData(res["hash"], res["title"], res["description"]);
+                // this.setState({ username: res[7] });
+                UserStore.setProvider(web3.currentProvider);
+                UserStore.at(`0x7da7cf1016ddd07a43818dc7f0ba4ea3f65eccd3`).then(
+                  async ins => {
+                    const acc = await web3.eth.getAccounts();
+                    ins
+                      .getUser(res[7], {
+                        from: acc[0]
+                      })
+                      .then(res => {
+                        this.setState({ username: res.username });
+                        this.setState({ uploaderEmail: res.email });
+                      });
+                  }
+                );
+              },
+              err => {
+                console.log(err);
+              }
+            );
+          });
+        }
+      );
     } catch (e) {
       console.error(e);
     }
@@ -78,7 +95,6 @@ class View extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.player);
     const { time } = this.state;
     if (time !== 0) {
       this.player.currentTime = time;
@@ -141,7 +157,7 @@ class View extends Component {
                 <Typography className={classes.uploader} component="p">
                   By:{" "}
                   <Link
-                    to="/profile"
+                    to={`/user/${this.state.uploaderEmail}`}
                     style={{ color: "#000", textDecoration: "none" }}
                   >
                     {this.state.username}

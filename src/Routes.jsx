@@ -10,6 +10,7 @@ import View from "./components/ViewVideo";
 import ProfileContainer from "./containers/ProfileContainer";
 import ViewContainer from "./containers/ViewContainer";
 import EditContainer from "./containers/EditContainer/EditContainer";
+import ViewUser from "./components/ViewUser";
 
 const Routes = () => {
   return (
@@ -20,6 +21,7 @@ const Routes = () => {
         <Route path="/login" exact component={Login} />
         <Route path="/signup" exact component={SignUp} />
         <Route path="/view/:id" exact component={View} />
+        <Route path="/user/:email" exact component={ViewUser} />
         <Route path="/profile" exact component={IsAuth(ProfileContainer)} />
         <Route path="/edit" exact component={IsAuth(EditContainer)} />
       </Switch>

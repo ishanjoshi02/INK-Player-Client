@@ -5,10 +5,8 @@ const resolveWeb3 = resolve => {
   let { web3 } = window;
   let provider;
   if (typeof web3 !== "undefined") {
-    console.log("Injected web3");
     provider = web3.currentProvider;
   } else {
-    console.log("Local web3");
     provider = new Web3.providers.HttpProvider(`http://127.0.0.1:7545`);
   }
   web3 = new Web3(provider);
