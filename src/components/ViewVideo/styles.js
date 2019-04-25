@@ -1,6 +1,6 @@
 const styles = {
   card: {
-    maxWidth: 360,
+    maxWidth: "75%",
     display: "flex",
     flexDirection: "column"
   },

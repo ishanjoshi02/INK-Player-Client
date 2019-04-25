@@ -132,15 +132,16 @@ class View extends Component {
                     controls
                   />
                 ) : (
-                  <CardMedia className={classes.card}>
-                    <video
-                      controls
-                      ref={this.ref}
-                      component="video"
-                      src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
-                      title={this.state.title}
-                    />
-                  </CardMedia>
+                  <video
+                    controls
+                    style={{
+                      width: "100%"
+                    }}
+                    ref={this.ref}
+                    component="video"
+                    src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
+                    title={this.state.title}
+                  />
                 )}
                 <Typography gutterBottom variant="h5" component="h2">
                   {this.state.title}
