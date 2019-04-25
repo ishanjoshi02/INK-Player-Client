@@ -16,6 +16,7 @@ import JWT_SECRET from "../../secrets/jwt_secret";
 // CSS
 import styles from "./styles";
 import { getWeb3 } from "../../utils/getWeb3";
+import getCategories from "../../utils/getCategories";
 
 // const IPFS = require("ipfs");
 // const node = new IPFS();
@@ -70,15 +71,7 @@ class UploadVideo extends Component {
   };
 
   renderCategoriesOptions = () => {
-    const categories = [
-      "Music",
-      "Gaming",
-      "Trailer",
-      "Vlogs",
-      "Advertisement",
-      "Other"
-    ];
-
+    const categories = getCategories();
     return categories.map((item, i) => (
       <MenuItem key={i} value={item}>
         {item}
