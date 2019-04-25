@@ -62,26 +62,56 @@ class PreviewVideo extends Component {
     this.props.history.push(`/view/${this.props.id}`);
   };
   render() {
-    const { classes } = this.props;
-    return (
-      <Grid key={this.props.id} style={{ margin: 5 }}>
-        <Card onClick={this.redirectToView} className={classes.card}>
-          <CardActionArea>
-            <CardMedia
-              component="video"
-              classname={classes.media}
-              src={`https://ipfs.io/ipfs/${this.state.hash}`}
-            />
-          </CardActionArea>
-          <CardContent>
-            <Typography gutterBottom variant="headline" component="h2">
-              {this.state.title}
-            </Typography>
-            <Typography variant="subheading">{this.state.category}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-    );
+    const { classes, category } = this.props;
+    if (category) {
+      if (this.state.category === category) {
+        return (
+          <Grid key={this.props.id} style={{ margin: 5 }}>
+            <Card onClick={this.redirectToView} className={classes.card}>
+              <CardActionArea>
+                <CardMedia
+                  component="video"
+                  classname={classes.media}
+                  src={`https://ipfs.io/ipfs/${this.state.hash}`}
+                />
+              </CardActionArea>
+              <CardContent>
+                <Typography gutterBottom variant="headline" component="h2">
+                  {this.state.title}
+                </Typography>
+                <Typography variant="subheading">
+                  {this.state.category}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        );
+      } else {
+        return null;
+      }
+    } else {
+      return (
+        <Grid key={this.props.id} style={{ margin: 5 }}>
+          <Card onClick={this.redirectToView} className={classes.card}>
+            <CardActionArea>
+              <CardMedia
+                component="video"
+                classname={classes.media}
+                src={`https://ipfs.io/ipfs/${this.state.hash}`}
+              />
+            </CardActionArea>
+            <CardContent>
+              <Typography gutterBottom variant="headline" component="h2">
+                {this.state.title}
+              </Typography>
+              <Typography variant="subheading">
+                {this.state.category}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      );
+    }
   }
 }
 PreviewVideo.propTypes = {
