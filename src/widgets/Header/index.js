@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
+import {
+  withStyles,
+  MuiThemeProvider,
+  createMuiTheme
+} from "@material-ui/core/styles";
 import { AppBar, Toolbar, IconButton, Typography } from "@material-ui/core";
 
 import MyDrawer from "./Drawer";
@@ -13,6 +17,15 @@ import "./Header.css";
 import styles from "./styles";
 import AuthButton from "../AuthButton";
 
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true
+  },
+  palette: {
+    type: "dark"
+  }
+});
+
 const Header = props => {
   const classes = props.classes;
   const [active, setActive] = useState(false);
@@ -20,13 +33,14 @@ const Header = props => {
     setActive(false);
   };
   return (
-    <div>
+    <MuiThemeProvider theme={theme}>
       <AppBar
+        style={{ backgroundColor: theme.palette }}
         className={classNames(classes.appBar, active && classes.appBarShift)}
         position="absolute"
       >
         <Toolbar
-          className="navbar navbar-expand-lg navbar-dark bg-primary"
+          className="navbar navbar-expand-lg navbar-dark bg-dark"
           disableGutters={!active}
         >
           <IconButton
@@ -43,20 +57,20 @@ const Header = props => {
             <MenuIcon />
           </IconButton>
           <Typography
-            variant="title"
+            variant="h6"
             color="inherit"
             noWrap
             className={classes.grow}
           >
             <Link style={{ color: "#ffffff", textDecoration: "none" }} to="/">
-              Ink Player
+              INK Player
             </Link>
           </Typography>
           <AuthButton />
         </Toolbar>
       </AppBar>
       <MyDrawer active={active} closeDrawer={closeDrawer} />
-    </div>
+    </MuiThemeProvider>
   );
 };
 
