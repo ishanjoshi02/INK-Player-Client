@@ -85,7 +85,7 @@ class UploadVideo extends Component {
       <CardMedia
         component="video"
         controls
-        style={{ height: "560px", background: "#000000" }}
+        style={{ height: "400px", background: "#000" }}
         className={classes.media}
         src={URL.createObjectURL(this.state.file)}
         title={this.state.file.name}
@@ -155,7 +155,7 @@ class UploadVideo extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className="container-fluid" style={{ padding: "5%" }}>
+      <div className="container-fluid" style={{ paddingTop: "5%" }}>
         <Card className={classes.card} style={{ width: "70%" }}>
           <CardContent>
             <form>

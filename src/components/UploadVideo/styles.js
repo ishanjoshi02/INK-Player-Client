@@ -10,6 +10,7 @@ const styles = theme => ({
     margin: theme.spacing.unit
   },
   card: {
+    maxWidth: 716,
     marginLeft: "auto",
     marginRight: "auto"
   },

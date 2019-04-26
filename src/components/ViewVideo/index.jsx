@@ -134,11 +134,8 @@ class View extends Component {
                 ) : (
                   <video
                     controls
-                    style={{
-                      width: "100%"
-                    }}
+                    style={{ width: "75%" }}
                     ref={this.ref}
-                    component="video"
                     src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
                     title={this.state.title}
                   />
