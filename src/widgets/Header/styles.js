@@ -12,19 +12,16 @@ const styles = theme => ({
 
   search: {
     position: "relative",
-    borderRadius: theme.shape.borderRadius * 5,
-    marginRight: theme.spacing.unit * 2,
-    marginLeft: 0,
     marginBottom: 10,
     marginTop: 5,
-    width: "100%",
+    marginRight: "35%",
     [theme.breakpoints.up("sm")]: {
-      // marginLeft: theme.spacing.unit * 3,
+      // marginRight: theme.spacing.unit * 3,
       width: "auto"
     }
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    // width: theme.spacing.unit * 8,
     height: "100%",
     position: "absolute",
     pointerEvents: "none",
@@ -42,7 +39,7 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
+    paddingLeft: theme.spacing.unit * 5,
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {

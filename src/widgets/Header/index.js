@@ -9,7 +9,8 @@ import {
   createMuiTheme
 } from "@material-ui/core/styles";
 import { AppBar, Toolbar, IconButton, Typography } from "@material-ui/core";
-
+import SearchIcon from "@material-ui/icons/Search";
+import InputBase from "@material-ui/core/InputBase";
 import MyDrawer from "./Drawer";
 
 // CSS
@@ -66,6 +67,18 @@ const Header = props => {
               INK Player
             </Link>
           </Typography>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput
+              }}
+            />
+          </div>
           <AuthButton />
         </Toolbar>
       </AppBar>

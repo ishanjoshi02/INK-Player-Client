@@ -45,18 +45,17 @@ class Home extends React.Component {
     let component = null;
     component = categories.map(category => {
       return (
-        <div key={category}>
-          <React.Fragment>
-            <h1>{category}</h1>
-            {this.state.ids.map(id => (
-              <PreviewVideo
-                id={id}
-                category={category}
-                history={this.props.history}
-              />
-            ))}
-          </React.Fragment>
-        </div>
+        /* <div key={category}> */
+        <React.Fragment>
+          {this.state.ids.map(id => (
+            <PreviewVideo
+              id={id}
+              category={category}
+              history={this.props.history}
+            />
+          ))}
+        </React.Fragment>
+        /* </div> */
       );
     });
     return component;
@@ -64,7 +63,11 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        <Grid container spacing={8}>
+        <Grid
+          container
+          spacing={8}
+          style={{ paddingLeft: "7%", paddingTop: "2%" }}
+        >
           {this.renderPreviews()}
         </Grid>
       </div>
