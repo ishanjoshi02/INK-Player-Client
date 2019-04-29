@@ -14,6 +14,7 @@ import { getAudioStatus, toggleMode } from "../../actions";
 import { connect } from "react-redux";
 
 import styles from "./styles";
+import { getWeb3 } from "../../utils/getWeb3";
 
 const Web3 = require("web3");
 const VideoStoreArtifact = require("../../contracts/VideoStore.json");
@@ -95,10 +96,14 @@ class View extends Component {
   }
 
   componentDidUpdate() {
-    const { time } = this.state;
-    if (time !== 0) {
-      this.player.currentTime = time;
-      this.player.play();
+    try {
+      const { time } = this.state;
+      if (time !== 0) {
+        this.player.currentTime = time;
+        this.player.play();
+      }
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -114,6 +119,32 @@ class View extends Component {
 
   ref = player => {
     this.player = player;
+  };
+
+  addSubscriber = async () => {
+    // get Uploader email
+    const { uploaderEmail } = this.state;
+    const { email } = this.props.user;
+
+    const web3 = await getWeb3();
+    UserStore.setProvider(web3.currentProvider);
+
+    UserStore.at("0x7da7cf1016ddd07a43818dc7f0ba4ea3f65eccd3").then(
+      instance => {
+        web3.eth.getAccounts().then(accounts => {
+          console.log(accounts);
+          instance
+            .addSubscriber(uploaderEmail, email, { from: accounts[0] })
+            .then(async () => {
+              const subscribers = await instance.getSubscriberCount(
+                uploaderEmail,
+                { from: accounts[0] }
+              );
+              console.log(subscribers.toNumber());
+            });
+        });
+      }
+    );
   };
 
   render() {
@@ -152,6 +183,16 @@ class View extends Component {
                 >
                   {this.state.audio ? `Video` : `Audio`}
                 </Button>
+                {this.state.uploaderEmail !== this.props.user.email ? (
+                  <Button
+                    className={classes.buttonPos}
+                    variant="contained"
+                    color="secondary"
+                    onClick={this.addSubscriber}
+                  >
+                    Subscribe
+                  </Button>
+                ) : null}
                 <Typography className={classes.uploader} component="p">
                   By:{" "}
                   <Link
@@ -179,6 +220,7 @@ View.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   const { time, audio } = state.videos;
   return {
+    user: state.user,
     time,
     audio
   };

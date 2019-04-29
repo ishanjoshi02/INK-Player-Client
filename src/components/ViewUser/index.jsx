@@ -34,8 +34,8 @@ class ViewUser extends Component {
     VideoStore.at(`0x90154d3e6bcf0eb951b501eca479c1224fb125c6`).then(
       vidInst => {
         web3.eth.getAccounts().then(accInst => {
-          vidInst.getVideoListCount
-            .call({
+          vidInst.getVideosByUsers
+            .call(email, {
               from: accInst[0]
             })
             .then(

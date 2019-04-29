@@ -64,8 +64,10 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        <Grid container spacing={8}>
-          {this.renderPreviews()}
+        <Grid container spacing={5}>
+          {this.state.ids.map(id => (
+            <PreviewVideo id={id} history={this.props.history} />
+          ))}
         </Grid>
       </div>
     );
