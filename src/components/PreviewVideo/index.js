@@ -14,22 +14,27 @@ import { getWeb3 } from "../../utils/getWeb3";
 const VideoStoreArtifact = require("../../contracts/VideoStore.json");
 const VideoStore = TruffleContract(VideoStoreArtifact);
 const Web3 = require("web3");
+
 const styles = theme => ({
   root: {
     flexGrow: 1
   },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: "center",
-    color: theme.palette.text.secondary
-  },
   card: {
+<<<<<<< HEAD
     maxWidth: 200
+=======
+    width: 350,
+    maxWidth: 400,
+    height: 350
+>>>>>>> c88616b608e2b27876366d4feb1422aa5fedf3d1
   },
   media: {
-    width: "100%"
+    width: "100%",
+    maxHeight: "200px",
+    objectFit: "fill"
   }
 });
+
 class PreviewVideo extends Component {
   constructor(props) {
     super(props);
@@ -40,27 +45,22 @@ class PreviewVideo extends Component {
     console.log(id);
     const web3 = new Web3(window.web3.currentProvider);
     VideoStore.setProvider(web3.currentProvider);
-    const instance = VideoStore.at(
+    const instance = await VideoStore.at(
       `0x90154d3e6bcf0eb951b501eca479c1224fb125c6`
-    ).then(vidInst => {
-      const accounts = web3.eth.getAccounts().then(accInst => {
-        const vidInfo = vidInst.getVideo.call(id).then(
-          res => {
-            console.log(res);
-            const { category, title, hash } = res;
-            this.setState({ category, title, hash });
-          },
-          err => {
-            console.log(err);
-          }
-        );
-      });
-    });
+    );
+
+    const vidInfo = await instance.getVideo.call(id);
+    console.log(vidInfo);
+    const { category, title, hash } = vidInfo;
+    this.setState({ category, title, hash });
   };
+
   redirectToView = () => {
     this.props.history.push(`/view/${this.props.id}`);
   };
+
   render() {
+    console.log(this.state.title);
     const { classes, category } = this.props;
     if (category) {
       if (this.state.category === category) {
