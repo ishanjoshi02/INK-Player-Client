@@ -1,6 +1,7 @@
 import TruffleContract from "truffle-contract";
 import JWT_SECRET from "../secrets/jwt_secret";
 import { getWeb3 } from "../utils/getWeb3";
+import { UserStoreAddress } from "../secrets/contract_addresses";
 const UserStoreArtifact = require("../contracts/UserStore.json");
 const UserStore = TruffleContract(UserStoreArtifact);
 // const UserStore = artifacts.require("UserStore");
@@ -14,7 +15,7 @@ async function getUserStoreInstance() {
   // return await UserStore.deployed().then(ins => {
   //   return ins;
   // });
-  return await UserStore.at(`0x7da7cf1016ddd07a43818dc7f0ba4ea3f65eccd3`);
+  return await UserStore.at(UserStoreAddress);
 }
 function readCookie(name) {
   var nameEQ = name + "=";
