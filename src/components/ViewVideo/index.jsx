@@ -15,6 +15,10 @@ import { connect } from "react-redux";
 
 import styles from "./styles";
 import { getWeb3 } from "../../utils/getWeb3";
+import {
+  UserStoreAddress,
+  VideoStoreAddress
+} from "../../secrets/contract_addresses";
 
 const Web3 = require("web3");
 const VideoStoreArtifact = require("../../contracts/VideoStore.json");
@@ -47,36 +51,32 @@ class View extends Component {
       const { id } = this.props.match.params;
       const web3 = new Web3(window.web3.currentProvider);
       VideoStore.setProvider(web3.currentProvider);
-      VideoStore.at(`0x90154d3e6bcf0eb951b501eca479c1224fb125c6`).then(
-        vidInst => {
-          web3.eth.getAccounts().then(accInst => {
-            vidInst.getVideo.call(id).then(
-              res => {
-                console.log(res);
-                this.setData(res["hash"], res["title"], res["description"]);
-                // this.setState({ username: res[7] });
-                UserStore.setProvider(web3.currentProvider);
-                UserStore.at(`0x7da7cf1016ddd07a43818dc7f0ba4ea3f65eccd3`).then(
-                  async ins => {
-                    const acc = await web3.eth.getAccounts();
-                    ins
-                      .getUser(res[7], {
-                        from: acc[0]
-                      })
-                      .then(res => {
-                        this.setState({ username: res.username });
-                        this.setState({ uploaderEmail: res.email });
-                      });
-                  }
-                );
-              },
-              err => {
-                console.log(err);
-              }
-            );
-          });
-        }
-      );
+      VideoStore.at(VideoStoreAddress).then(vidInst => {
+        web3.eth.getAccounts().then(accInst => {
+          vidInst.getVideo.call(id).then(
+            res => {
+              console.log(res);
+              this.setData(res["hash"], res["title"], res["description"]);
+              // this.setState({ username: res[7] });
+              UserStore.setProvider(web3.currentProvider);
+              UserStore.at(UserStoreAddress).then(async ins => {
+                const acc = await web3.eth.getAccounts();
+                ins
+                  .getUser(res[7], {
+                    from: acc[0]
+                  })
+                  .then(res => {
+                    this.setState({ username: res.username });
+                    this.setState({ uploaderEmail: res.email });
+                  });
+              });
+            },
+            err => {
+              console.log(err);
+            }
+          );
+        });
+      });
     } catch (e) {
       console.error(e);
     }
@@ -129,22 +129,20 @@ class View extends Component {
     const web3 = await getWeb3();
     UserStore.setProvider(web3.currentProvider);
 
-    UserStore.at("0x7da7cf1016ddd07a43818dc7f0ba4ea3f65eccd3").then(
-      instance => {
-        web3.eth.getAccounts().then(accounts => {
-          console.log(accounts);
-          instance
-            .addSubscriber(uploaderEmail, email, { from: accounts[0] })
-            .then(async () => {
-              const subscribers = await instance.getSubscriberCount(
-                uploaderEmail,
-                { from: accounts[0] }
-              );
-              console.log(subscribers.toNumber());
-            });
-        });
-      }
-    );
+    UserStore.at(UserStoreAddress).then(instance => {
+      web3.eth.getAccounts().then(accounts => {
+        console.log(accounts);
+        instance
+          .addSubscriber(uploaderEmail, email, { from: accounts[0] })
+          .then(async () => {
+            const subscribers = await instance.getSubscriberCount(
+              uploaderEmail,
+              { from: accounts[0] }
+            );
+            console.log(subscribers.toNumber());
+          });
+      });
+    });
   };
 
   render() {

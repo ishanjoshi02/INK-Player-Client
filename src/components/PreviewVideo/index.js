@@ -11,6 +11,7 @@ import TruffleContract from "truffle-contract";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { getWeb3 } from "../../utils/getWeb3";
+import { VideoStoreAddress } from "../../secrets/contract_addresses";
 const VideoStoreArtifact = require("../../contracts/VideoStore.json");
 const VideoStore = TruffleContract(VideoStoreArtifact);
 const Web3 = require("web3");
@@ -20,13 +21,9 @@ const styles = theme => ({
     flexGrow: 1
   },
   card: {
-<<<<<<< HEAD
-    maxWidth: 200
-=======
     width: 350,
     maxWidth: 400,
     height: 350
->>>>>>> c88616b608e2b27876366d4feb1422aa5fedf3d1
   },
   media: {
     width: "100%",
@@ -45,9 +42,7 @@ class PreviewVideo extends Component {
     console.log(id);
     const web3 = new Web3(window.web3.currentProvider);
     VideoStore.setProvider(web3.currentProvider);
-    const instance = await VideoStore.at(
-      `0x90154d3e6bcf0eb951b501eca479c1224fb125c6`
-    );
+    const instance = await VideoStore.at(VideoStoreAddress);
 
     const vidInfo = await instance.getVideo.call(id);
     console.log(vidInfo);

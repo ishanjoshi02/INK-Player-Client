@@ -17,19 +17,17 @@ import JWT_SECRET from "../../secrets/jwt_secret";
 import styles from "./styles";
 import { getWeb3 } from "../../utils/getWeb3";
 import getCategories from "../../utils/getCategories";
+import { VideoStoreAddress } from "../../secrets/contract_addresses";
 
-// const IPFS = require("ipfs");
-// const node = new IPFS();
 const ipfsClient = require("ipfs-http-client");
-const node = ipfsClient("ipfs.infura.io", "5001", { protocol: "https" });
-// const node = ipfsClient("localhost", "5001");
-console.log(node);
-const Web3 = require("web3");
-const web3 = getWeb3();
+const node = ipfsClient({
+  host: "ipfs.infura.io",
+  port: "5001",
+  protocol: "https"
+});
 const VideoStoreArtifact = require("../../contracts/VideoStore.json");
 const VideoStore = TruffleContract(VideoStoreArtifact);
 const jwt = require("jsonwebtoken");
-const fs = require("fs");
 class UploadVideo extends Component {
   state = {
     title: "",
@@ -124,13 +122,10 @@ class UploadVideo extends Component {
             // const web3 = new Web3(window.web3.currentProvider);
             const web3 = await getWeb3();
             VideoStore.setProvider(web3.currentProvider);
-            const instance = await VideoStore.at(
-              `0x90154d3e6bcf0eb951b501eca479c1224fb125c6`
-            );
+            const instance = await VideoStore.at(VideoStoreAddress);
             const accounts = await web3.eth.getAccounts();
             console.log(accounts);
             const email = jwt.decode(this.readCookie(`token`), JWT_SECRET);
-            console.log(`Your email is: ${email}`);
             const { title, description, category } = this.state;
             await instance.addVideo(
               title,
@@ -141,11 +136,10 @@ class UploadVideo extends Component {
               email,
               { from: accounts[0] }
             );
-            const count = (await instance.getVideoListCount.call({
+            const count = (await instance.getVideoCount.call({
               from: accounts[0]
             })).toNumber();
-            console.log(`Videos on Blockchain are ${count}`);
-            console.log(this.props.history.push(`/view/${count}`));
+            this.props.history.push(`/view/${count}`);
           }
         }
       );

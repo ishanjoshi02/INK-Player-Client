@@ -5,6 +5,11 @@ import { Card, CardContent, Button, Typography } from "@material-ui/core";
 import TruffleContract from "truffle-contract";
 import { Link } from "react-router-dom";
 
+import {
+  VideoStoreAddress,
+  UserStoreAddress
+} from "../../secrets/contract_addresses";
+
 import styles from "./styles";
 import { getWeb3 } from "../../utils/getWeb3";
 
@@ -28,32 +33,28 @@ class Profile extends Component {
 
   getSubscribers = () => {
     UserStore.setProvider(web3.currentProvider);
-    UserStore.at("0x7da7cf1016ddd07a43818dc7f0ba4ea3f65eccd3").then(
-      instance => {
-        getWeb3().then(accounts => {
-          const account = accounts[0];
-          const res = instance.getSubscriberCount(this.props.email, {
-            from: account
-          });
-          this.setState({ subscribers: res.toNumber() });
+    UserStore.at(UserStoreAddress).then(instance => {
+      getWeb3().then(async accounts => {
+        const account = accounts[0];
+        const res = await instance.getSubscriberCount(this.props.email, {
+          from: account
         });
-      }
-    );
+        this.setState({ subscribers: res.toNumber() });
+      });
+    });
   };
 
   retVidCound = () => {
     VideoStore.setProvider(web3.currentProvider);
-    const instance = VideoStore.at(
-      `0x90154d3e6bcf0eb951b501eca479c1224fb125c6`
-    ).then(vidInst => {
-      const accounts = web3.eth.getAccounts().then(accInst => {
-        const count = vidInst.getVideoListCount
-          .call({
+    VideoStore.at(VideoStoreAddress).then(vidInst => {
+      web3.eth.getAccounts().then(accInst => {
+        vidInst.getVideosByUser
+          .call(this.props.email, {
             from: accInst[0]
           })
           .then(
             res => {
-              this.changeCount(res["words"][0]);
+              this.setState({ videoCount: res.length });
             },
             err => {
               console.log(err);
@@ -71,6 +72,7 @@ class Profile extends Component {
 
   componentDidMount() {
     this.retVidCound();
+    this.getSubscribers();
   }
 
   render() {
@@ -93,7 +95,7 @@ class Profile extends Component {
             No. of videos uploaded: {this.state.vidCount}
           </Typography>
           <Typography className={classes.pos} component="p">
-            No. of subscribers uploaded: {this.state.subscribers}
+            No. of subscribers: {this.state.subscribers}
           </Typography>
           <Link to="/edit">
             <Button
