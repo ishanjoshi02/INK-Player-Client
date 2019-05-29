@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import MenuIcon from "@material-ui/icons/Menu";
-import classNames from "classnames";
 import {
   withStyles,
   MuiThemeProvider,
   createMuiTheme
 } from "@material-ui/core/styles";
 import { AppBar, Toolbar, IconButton, Typography } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
-import InputBase from "@material-ui/core/InputBase";
-import MyDrawer from "./Drawer";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import PersonIcon from "@material-ui/icons/Person";
+import HomeIcon from "@material-ui/icons/Home";
 
 // CSS
 import "./Header.css";
@@ -27,65 +28,139 @@ const theme = createMuiTheme({
   }
 });
 
-const Header = props => {
-  const classes = props.classes;
-  const [active, setActive] = useState(false);
-  const closeDrawer = () => {
-    setActive(false);
+class Header extends React.Component {
+  state = {
+    anchorEl: null,
+    mobileMoreAnchorEl: null
   };
-  return (
-    <MuiThemeProvider theme={theme}>
-      <AppBar
-        style={{ backgroundColor: theme.palette }}
-        className={classNames(classes.appBar, active && classes.appBarShift)}
-        position="absolute"
+
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+    this.handleMobileMenuClose();
+  };
+
+  handleMobileMenuOpen = event => {
+    this.setState({ mobileMoreAnchorEl: event.currentTarget });
+  };
+
+  handleMobileMenuClose = () => {
+    this.setState({ mobileMoreAnchorEl: null });
+  };
+
+  render() {
+    const { classes } = this.props;
+    const { anchorEl, mobileMoreAnchorEl } = this.state;
+    const isMenuOpen = Boolean(anchorEl);
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    const renderMenu = (
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={isMenuOpen}
+        onClose={this.handleMenuClose}
       >
-        <Toolbar
-          className="navbar navbar-expand-lg navbar-dark bg-dark"
-          disableGutters={!active}
+        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
+        <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
+      </Menu>
+    );
+
+    const renderMobileMenu = (
+      <Menu
+        anchorEl={mobileMoreAnchorEl}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={isMobileMenuOpen}
+        onClose={this.handleMobileMenuClose}
+      >
+        <Link style={{ color: "#ffffff", textDecoration: "none" }} to="/">
+          <MenuItem>
+            <IconButton color="inherit">
+              <HomeIcon />
+            </IconButton>
+            <p>Home</p>
+          </MenuItem>
+        </Link>
+
+        <Link style={{ color: "#ffffff", textDecoration: "none" }} to="/upload">
+          <MenuItem>
+            <IconButton color="inherit">
+              <CloudUploadIcon />
+            </IconButton>
+            <p>Upload</p>
+          </MenuItem>
+        </Link>
+        <Link
+          style={{ color: "#ffffff", textDecoration: "none" }}
+          to="/profile"
         >
-          <IconButton
-            style={{ textDecoration: "none" }}
-            className={classNames(
-              "App",
-              classes.menuButton,
-              active && classes.hide
-            )}
-            color="inherit"
-            aria-label="Open Drawer"
-            onClick={() => setActive(true)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.grow}
-          >
-            <Link style={{ color: "#ffffff", textDecoration: "none" }} to="/">
-              INK Player
-            </Link>
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+          <MenuItem onClick={this.handleProfileMenuOpen}>
+            <IconButton color="inherit">
+              <PersonIcon />
+            </IconButton>
+            <p>Profile</p>
+          </MenuItem>
+        </Link>
+      </Menu>
+    );
+
+    return (
+      <MuiThemeProvider theme={theme}>
+        <AppBar style={{ backgroundColor: theme.palette }} position="absolute">
+          <Toolbar className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <Typography
+              variant="h6"
+              color="inherit"
+              noWrap
+              className={classes.grow}
+            >
+              <Link style={{ color: "#ffffff", textDecoration: "none" }} to="/">
+                INK Player
+              </Link>
+            </Typography>
+            <div className={classes.sectionDesktop}>
+              <Link style={{ color: "#ffffff", textDecoration: "none" }} to="/">
+                <IconButton color="inherit">
+                  <HomeIcon />
+                </IconButton>
+              </Link>
+              <Link
+                style={{ color: "#ffffff", textDecoration: "none" }}
+                to="/upload"
+              >
+                <IconButton color="inherit">
+                  <CloudUploadIcon />
+                </IconButton>
+              </Link>
+
+              <Link
+                style={{ color: "#ffffff", textDecoration: "none" }}
+                to="/profile"
+              >
+                <IconButton color="inherit">
+                  <PersonIcon />
+                </IconButton>
+              </Link>
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-            />
-          </div>
-          <AuthButton />
-        </Toolbar>
-      </AppBar>
-      <MyDrawer active={active} closeDrawer={closeDrawer} />
-    </MuiThemeProvider>
-  );
-};
+            <div className={classes.sectionMobile}>
+              <IconButton
+                aria-haspopup="true"
+                onClick={this.handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </div>
+            <AuthButton />
+          </Toolbar>
+        </AppBar>
+        {renderMenu}
+        {renderMobileMenu}
+      </MuiThemeProvider>
+    );
+  }
+}
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -93,3 +168,32 @@ Header.propTypes = {
 };
 
 export default withStyles(styles, { withTheme: true })(Header);
+
+// class PrimarySearchAppBar extends React.Component {
+//
+
+//     return (
+//       <div className={ classes.root }>
+//         <AppBar position="static">
+//           <Toolbar>
+//             <IconButton className={ classes.menuButton } color="inherit" aria-label="Open drawer">
+//               <MenuIcon />
+//             </IconButton>
+//             <Typography className={ classes.title } variant="h6" color="inherit" noWrap>
+//               Material-UI
+//             </Typography>
+//             <div className={ classes.grow } />
+
+//           </Toolbar>
+//         </AppBar>
+
+//       </div>
+//     );
+//   }
+// }
+
+// PrimarySearchAppBar.propTypes = {
+//   classes: PropTypes.object.isRequired,
+// };
+
+// export default withStyles(styles)(PrimarySearchAppBar);
