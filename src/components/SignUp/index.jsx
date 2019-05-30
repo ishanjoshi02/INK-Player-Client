@@ -1,8 +1,55 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 
 import { signup } from "../../actions";
+
+const styles = theme => ({
+  card: {
+    width: 350,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "100px",
+    padding: "20px"
+  },
+  inkPlayer: {
+    textAlign: "center",
+    "&:hover": {
+      color: "#1A73E8"
+    }
+  },
+  login: {
+    "&:hover": {
+      textDecoration: "none"
+    }
+  },
+  create: {
+    "&:hover": {
+      textDecoration: "none"
+    }
+  },
+  container: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit
+  },
+  dense: {
+    marginTop: 16
+  },
+  menu: {
+    width: 200
+  }
+});
 
 class SignUp extends Component {
   state = {
@@ -70,78 +117,120 @@ class SignUp extends Component {
     return null;
   }
   render() {
+    const { classes } = this.props;
+
     return (
-      <React.Fragment>
+      <Card className={classes.card}>
         <form onSubmit={this.onSubmit}>
-          <fieldset>
-            <legend>Sign Up Form</legend>
-            <div className="form-group ">
-              <input
-                id="firstName"
-                type="text"
-                className="form-control"
-                value={this.state.firstname}
-                placeholder="Enter your First Name"
-                name="firstname"
-                onChange={this.onChange}
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                value={this.state.lastname}
-                placeholder="Enter your Last Name"
-                name="lastname"
-                onChange={this.onChange}
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                value={this.state.username}
-                placeholder="Enter your Username"
-                name="username"
-                onChange={this.onChange}
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="email"
-                className="form-control"
-                value={this.state.email}
-                placeholder="Enter your Email"
-                name="email"
-                onChange={this.onChange}
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                className="form-control"
-                value={this.state.password}
-                placeholder="Enter your Password"
-                name="password"
-                onChange={this.onChange}
-              />
-            </div>
-            <button className="btn btn-primary" type="submit">
-              Signup
-            </button>
-            <p
-              style={{
-                marginTop: "10px"
-              }}
-            >
-              Already have an account,{" "}
-              <Link to="/login">Click here to Login</Link>
-            </p>
-            <br />
-            {this.renderError()}
-          </fieldset>
+          <Typography variant="h5" className={classes.inkPlayer}>
+            INK Player
+          </Typography>
+          <Typography
+            variant="h6"
+            style={{
+              textAlign: "center",
+              marginTop: "10px",
+              marginBottom: "10px"
+            }}
+          >
+            Create your account
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <div className="form-group ">
+                <TextField
+                  style={{ marginRight: "10px" }}
+                  id="outlined-email-input"
+                  label="First Name"
+                  type="text"
+                  name="firstname"
+                  margin="normal"
+                  variant="outlined"
+                  value={this.state.firstname}
+                  onChange={this.onChange}
+                />
+              </div>
+            </Grid>
+            <Grid item xs={6}>
+              <div className="form-group">
+                <TextField
+                  style={{ marginLeft: "10px" }}
+                  id="outlined-email-input"
+                  label="Last Name"
+                  type="text"
+                  name="lastname"
+                  margin="normal"
+                  variant="outlined"
+                  value={this.state.lastname}
+                  onChange={this.onChange}
+                />
+              </div>
+            </Grid>
+          </Grid>
+          <div className="form-group">
+            <TextField
+              fullWidth
+              id="outlined-email-input"
+              label="Username"
+              type="text"
+              name="username"
+              margin="normal"
+              variant="outlined"
+              value={this.state.usernamename}
+              onChange={this.onChange}
+            />
+          </div>
+          <div className="form-group">
+            <TextField
+              fullWidth
+              id="outlined-email-input"
+              label="Email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              margin="normal"
+              variant="outlined"
+              value={this.state.email}
+              onChange={this.onChange}
+            />
+          </div>
+          <div className="form-group">
+            <TextField
+              fullWidth
+              id="outlined-password-input"
+              label="Password"
+              name="password"
+              type="password"
+              margin="normal"
+              variant="outlined"
+              value={this.state.password}
+              onChange={this.onChange}
+            />
+          </div>
+          <Button
+            variant="contained"
+            style={{
+              backgroundColor: "#1A73E8",
+              color: "#fff",
+              float: "right"
+            }}
+            type="submit"
+          >
+            Sign Up
+          </Button>
+          <p
+            style={{
+              marginTop: "10px"
+            }}
+          >
+            <Link to="/login" className={classes.login}>
+              Login instead
+            </Link>
+          </p>
+          <br />
+          {this.renderError()}
         </form>
-      </React.Fragment>
+      </Card>
     );
   }
 }
@@ -152,4 +241,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps)(SignUp);
+SignUp.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(SignUp));

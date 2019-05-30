@@ -2,7 +2,47 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { login } from "../../actions";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
+const styles = theme => ({
+  card: {
+    width: 350,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "100px",
+    padding: "20px"
+  },
+  inkPlayer: {
+    textAlign: "center",
+    "&:hover": {
+      color: "#1A73E8"
+    }
+  },
+  create: {
+    "&:hover": {
+      textDecoration: "none"
+    }
+  },
+  container: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit
+  },
+  dense: {
+    marginTop: 16
+  },
+  menu: {
+    width: 200
+  }
+});
 class Login extends Component {
   state = {
     email: "",
@@ -52,47 +92,74 @@ class Login extends Component {
     return null;
   }
   render() {
+    const { classes } = this.props;
     return (
-      <React.Fragment>
+      <Card className={classes.card}>
         <form onSubmit={this.onSubmit}>
-          <fieldset>
-            <legend>Log In Form</legend>
-            <div className="form-group ">
-              <input
-                id="email"
-                type="email"
-                className="form-control"
-                value={this.state.email}
-                placeholder="Enter your Email"
-                name="email"
-                onChange={this.onChange}
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                className="form-control"
-                value={this.state.password}
-                placeholder="Enter your Password"
-                name="password"
-                onChange={this.onChange}
-              />
-            </div>
-            <button className="btn btn-primary" type="submit">
-              Log in
-            </button>
-            <p
-              style={{
-                marginTop: "10px"
-              }}
-            >
-              Don't have an account,{" "}
-              <Link to="/signup">Click here to Register</Link>
-            </p>
-            {this.renderError()}
-          </fieldset>
+          <Typography variant="h5" className={classes.inkPlayer}>
+            INK Player
+          </Typography>
+          <Typography
+            variant="h6"
+            style={{
+              textAlign: "center",
+              marginTop: "10px",
+              marginBottom: "10px"
+            }}
+          >
+            Sign in
+          </Typography>
+
+          <div className="form-group">
+            <TextField
+              fullWidth
+              id="outlined-email-input"
+              label="Email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              margin="normal"
+              variant="outlined"
+              value={this.state.email}
+              onChange={this.onChange}
+            />
+          </div>
+          <div className="form-group">
+            <TextField
+              fullWidth
+              id="outlined-password-input"
+              label="Password"
+              name="password"
+              type="password"
+              margin="normal"
+              variant="outlined"
+              value={this.state.password}
+              onChange={this.onChange}
+            />
+          </div>
+          <Button
+            variant="contained"
+            style={{
+              backgroundColor: "#1A73E8",
+              color: "#fff",
+              float: "right"
+            }}
+            type="submit"
+          >
+            Log in
+          </Button>
+          <p
+            style={{
+              marginTop: "10px"
+            }}
+          >
+            <Link to="/signup" className={classes.create}>
+              Create account
+            </Link>
+          </p>
+          {this.renderError()}
         </form>
-      </React.Fragment>
+      </Card>
     );
   }
 }
@@ -103,4 +170,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps)(Login);
+Login.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(Login));
