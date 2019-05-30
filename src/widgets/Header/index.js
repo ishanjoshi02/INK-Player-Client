@@ -13,6 +13,8 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import PersonIcon from "@material-ui/icons/Person";
 import HomeIcon from "@material-ui/icons/Home";
+import SearchIcon from "@material-ui/icons/Search";
+import InputBase from "@material-ui/core/InputBase";
 
 // CSS
 import "./Header.css";
@@ -119,6 +121,18 @@ class Header extends React.Component {
                 INK Player
               </Link>
             </Typography>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput
+                }}
+              />
+            </div>
             <div className={classes.sectionDesktop}>
               <Link style={{ color: "#ffffff", textDecoration: "none" }} to="/">
                 <IconButton color="inherit">
@@ -168,32 +182,3 @@ Header.propTypes = {
 };
 
 export default withStyles(styles, { withTheme: true })(Header);
-
-// class PrimarySearchAppBar extends React.Component {
-//
-
-//     return (
-//       <div className={ classes.root }>
-//         <AppBar position="static">
-//           <Toolbar>
-//             <IconButton className={ classes.menuButton } color="inherit" aria-label="Open drawer">
-//               <MenuIcon />
-//             </IconButton>
-//             <Typography className={ classes.title } variant="h6" color="inherit" noWrap>
-//               Material-UI
-//             </Typography>
-//             <div className={ classes.grow } />
-
-//           </Toolbar>
-//         </AppBar>
-
-//       </div>
-//     );
-//   }
-// }
-
-// PrimarySearchAppBar.propTypes = {
-//   classes: PropTypes.object.isRequired,
-// };
-
-// export default withStyles(styles)(PrimarySearchAppBar);
