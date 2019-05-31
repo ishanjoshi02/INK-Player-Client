@@ -21,8 +21,8 @@
     "redux": "^4.0.1",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
-    "truffle-contract": "^4.0.2",
-    "web3": "1.0.0-beta.37",
+    "truffle-contract": "^4.0.1",
+    "web3": "^1.0.0-beta.37",
     "xmlhttprequest": "^1.8.0"
   },
   "scripts": {

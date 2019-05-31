@@ -20,11 +20,7 @@ import getCategories from "../../utils/getCategories";
 import { VideoStoreAddress } from "../../secrets/contract_addresses";
 
 const ipfsClient = require("ipfs-http-client");
-const node = ipfsClient({
-  host: "ipfs.infura.io",
-  port: "5001",
-  protocol: "https"
-});
+const node = ipfsClient("/ip4/127.0.0.1/tcp/5001");
 const VideoStoreArtifact = require("../../contracts/VideoStore.json");
 const VideoStore = TruffleContract(VideoStoreArtifact);
 const jwt = require("jsonwebtoken");

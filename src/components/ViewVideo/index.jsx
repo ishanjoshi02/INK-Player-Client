@@ -26,6 +26,8 @@ const VideoStore = TruffleContract(VideoStoreArtifact);
 
 const UserStoreArtifact = require("../../contracts/UserStore.json");
 const UserStore = TruffleContract(UserStoreArtifact);
+const ipfsClient = require("ipfs-http-client");
+const node = ipfsClient("/ip4/127.0.0.1/tcp/5001");
 
 class View extends Component {
   state = {
@@ -157,7 +159,7 @@ class View extends Component {
                 {this.state.audio ? (
                   <audio
                     ref={this.ref}
-                    src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
+                    src={`http://localhost:8080/ipfs/${this.state.vidHash}`}
                     controls
                   />
                 ) : (
@@ -165,7 +167,7 @@ class View extends Component {
                     controls
                     style={{ width: "75%" }}
                     ref={this.ref}
-                    src={`https://ipfs.io/ipfs/${this.state.vidHash}`}
+                    src={`http://localhost:8080/ipfs/${this.state.vidHash}`}
                     title={this.state.title}
                   />
                 )}
