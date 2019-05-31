@@ -35,11 +35,13 @@ const styles = theme => ({
 class PreviewVideo extends Component {
   constructor(props) {
     super(props);
-    this.state = { title: "", category: "", hash: "" };
+    this.state = { title: "", category: "", hash: "", id: null };
   }
   componentDidMount = async () => {
     const { id } = this.props;
     console.log(id);
+
+    this.setState({ id });
     const web3 = new Web3(window.web3.currentProvider);
     VideoStore.setProvider(web3.currentProvider);
     const instance = await VideoStore.at(VideoStoreAddress);
@@ -58,7 +60,7 @@ class PreviewVideo extends Component {
     console.log(this.state.title);
     const { classes, category } = this.props;
     if (category) {
-      if (this.state.category === category) {
+      if (this.state.category === category && this.state.id != 0) {
         return (
           <Grid key={this.props.id} style={{ margin: 5 }}>
             <Card onClick={this.redirectToView} className={classes.card}>

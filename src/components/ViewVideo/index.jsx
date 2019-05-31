@@ -11,18 +11,24 @@ import {
 } from "@material-ui/core/";
 import { Link } from "react-router-dom";
 import { getAudioStatus, toggleMode } from "../../actions";
+import JWT_SECRET from "../../secrets/jwt_secret";
 import { connect } from "react-redux";
 
 import styles from "./styles";
 import { getWeb3 } from "../../utils/getWeb3";
 import {
   UserStoreAddress,
-  VideoStoreAddress
+  VideoStoreAddress,
+  LikedVideosAddress
 } from "../../secrets/contract_addresses";
 
 const Web3 = require("web3");
+const jwt = require("jsonwebtoken");
 const VideoStoreArtifact = require("../../contracts/VideoStore.json");
 const VideoStore = TruffleContract(VideoStoreArtifact);
+
+const LikedVideosArtifact = require("../../contracts/LikedVideos.json");
+const LikedVideosStore = TruffleContract(LikedVideosArtifact);
 
 const UserStoreArtifact = require("../../contracts/UserStore.json");
 const UserStore = TruffleContract(UserStoreArtifact);
@@ -39,7 +45,9 @@ class View extends Component {
     audio: false,
     playing: false,
     uploaderEmail: "",
-    time: 0
+    time: 0,
+    liked: false,
+    loaded: false
   };
 
   componentWillMount() {
@@ -92,9 +100,20 @@ class View extends Component {
       description: description
     });
   };
+  readCookie = name => {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(";");
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) === " ") c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
 
   componentDidMount() {
     this.getVidInfo();
+    this.isLiked();
   }
 
   componentDidUpdate() {
@@ -147,6 +166,46 @@ class View extends Component {
     });
   };
 
+  isLiked = async () => {
+    const { id } = this.props.match.params;
+    console.log(id);
+    const email = jwt.decode(this.readCookie(`token`), JWT_SECRET);
+    console.log(email);
+    const web3 = await getWeb3();
+    LikedVideosStore.setProvider(web3.currentProvider);
+    const instance = await LikedVideosStore.at(LikedVideosAddress);
+    const accounts = await web3.eth.getAccounts();
+    const result = await instance.isLiked.call(email, id, {
+      from: accounts[0]
+    });
+    console.log(result);
+    this.setState({ liked: result, loaded: true });
+  };
+
+  unLikeVideo = async () => {
+    const { id } = this.props.match.params;
+    const { email } = this.props.user;
+    const web3 = await getWeb3();
+    LikedVideosStore.setProvider(web3.currentProvider);
+    const instance = await LikedVideosStore.at(LikedVideosAddress);
+    const accounts = await web3.eth.getAccounts();
+    instance.removeVideo(email, id, { from: accounts[0] }).then(_ => {
+      this.setState({ liked: false });
+    });
+  };
+
+  likeVideo = async () => {
+    const { id } = this.props.match.params;
+    const { email } = this.props.user;
+    const web3 = await getWeb3();
+    LikedVideosStore.setProvider(web3.currentProvider);
+    const instance = await LikedVideosStore.at(LikedVideosAddress);
+    const accounts = await web3.eth.getAccounts();
+    instance.addVideo(email, id, { from: accounts[0] }).then(() => {
+      this.setState({ liked: true });
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const firstVideo = this.state.firstVideo;
@@ -192,6 +251,13 @@ class View extends Component {
                   >
                     Subscribe
                   </Button>
+                ) : null}
+                {this.state.loaded ? (
+                  this.state.liked ? (
+                    <button onClick={this.unLikeVideo}>Unlike</button>
+                  ) : (
+                    <button onClick={this.likeVideo}>Like</button>
+                  )
                 ) : null}
                 <Typography className={classes.uploader} component="p">
                   By:{" "}
