@@ -11,12 +11,14 @@ import ProfileContainer from "./containers/ProfileContainer";
 import ViewContainer from "./containers/ViewContainer";
 import EditContainer from "./containers/EditContainer/EditContainer";
 import ViewUser from "./components/ViewUser";
+import Search from "./components/Search";
 
 const Routes = () => {
   return (
     <Layout>
       <Switch>
         <Route path="/" exact component={IsAuth(Home)} />
+        <Route path="/search/:q" exact component={IsAuth(Search)} />
         <Route path="/upload" exact component={IsAuth(UploadVideo)} />
         <Route path="/login" exact component={Login} />
         <Route path="/signup" exact component={SignUp} />

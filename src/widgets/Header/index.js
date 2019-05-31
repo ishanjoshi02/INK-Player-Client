@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
   withStyles,
@@ -33,6 +33,7 @@ const theme = createMuiTheme({
 class Header extends React.Component {
   state = {
     anchorEl: null,
+    q: "",
     mobileMoreAnchorEl: null
   };
 
@@ -47,6 +48,14 @@ class Header extends React.Component {
 
   handleMobileMenuClose = () => {
     this.setState({ mobileMoreAnchorEl: null });
+  };
+
+  handleQueryChange = e => {
+    this.setState({ q: e.target.value });
+  };
+
+  search = () => {
+    this.props.history.push(`/search/${this.state.q}`);
   };
 
   render() {
@@ -127,6 +136,12 @@ class Header extends React.Component {
               </div>
               <InputBase
                 placeholder="Search…"
+                onChange={this.handleQueryChange}
+                onKeyPress={e => {
+                  if (e.key === "Enter") {
+                    this.search();
+                  }
+                }}
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput
@@ -181,4 +196,4 @@ Header.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(Header);
+export default withStyles(styles, { withTheme: true })(withRouter(Header));
