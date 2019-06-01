@@ -13,6 +13,9 @@ import { Link } from "react-router-dom";
 import { getAudioStatus, toggleMode } from "../../actions";
 import JWT_SECRET from "../../secrets/jwt_secret";
 import { connect } from "react-redux";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
 
 import styles from "./styles";
 import { getWeb3 } from "../../utils/getWeb3";
@@ -47,7 +50,9 @@ class View extends Component {
     uploaderEmail: "",
     time: 0,
     liked: false,
-    loaded: false
+    loaded: false,
+    playlistAdded: true,
+    added: false
   };
 
   componentWillMount() {
@@ -234,6 +239,41 @@ class View extends Component {
                   {this.state.title}
                 </Typography>
                 <Typography component="p">{this.state.description}</Typography>
+                {this.state.loaded ? (
+                  this.state.liked ? (
+                    <Button>
+                      <ThumbUpIcon
+                        style={{ color: "#1A73E8" }}
+                        onClick={this.unLikeVideo}
+                      />
+                    </Button>
+                  ) : (
+                    <Button>
+                      <ThumbUpIcon onClick={this.likeVideo} />
+                    </Button>
+                  )
+                ) : null}
+                {this.state.playlistAdded ? (
+                  this.state.added ? (
+                    <Button>
+                      <PlaylistAddCheckIcon className={classes.buttonPos} />
+                    </Button>
+                  ) : (
+                    <Button>
+                      <PlaylistAddIcon className={classes.buttonPos} />
+                    </Button>
+                  )
+                ) : null}
+                {this.state.uploaderEmail !== this.props.user.email ? (
+                  <Button
+                    className={classes.buttonPos}
+                    variant="contained"
+                    color="primary"
+                    onClick={this.addSubscriber}
+                  >
+                    Subscribe
+                  </Button>
+                ) : null}
                 <Button
                   className={classes.buttonPos}
                   variant="contained"
@@ -242,23 +282,7 @@ class View extends Component {
                 >
                   {this.state.audio ? `Video` : `Audio`}
                 </Button>
-                {this.state.uploaderEmail !== this.props.user.email ? (
-                  <Button
-                    className={classes.buttonPos}
-                    variant="contained"
-                    color="secondary"
-                    onClick={this.addSubscriber}
-                  >
-                    Subscribe
-                  </Button>
-                ) : null}
-                {this.state.loaded ? (
-                  this.state.liked ? (
-                    <button onClick={this.unLikeVideo}>Unlike</button>
-                  ) : (
-                    <button onClick={this.likeVideo}>Like</button>
-                  )
-                ) : null}
+
                 <Typography className={classes.uploader} component="p">
                   By:{" "}
                   <Link

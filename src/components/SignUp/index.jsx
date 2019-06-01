@@ -13,7 +13,7 @@ import { signup } from "../../actions";
 
 const styles = theme => ({
   card: {
-    width: 350,
+    width: 400,
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: "100px",

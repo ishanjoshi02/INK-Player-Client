@@ -97,13 +97,14 @@ class Profile extends Component {
           <Typography className={classes.pos} component="p">
             No. of subscribers: {this.state.subscribers}
           </Typography>
-          <Link to="/edit">
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.editButton}
-            >
-              Edit Profile
+          <Link to="/liked" className={classes.profileButtons}>
+            <Button variant="outlined" color="primary">
+              View liked videos
+            </Button>
+          </Link>
+          <Link to="/playlists" className={classes.profileButtons}>
+            <Button variant="outlined" color="primary">
+              View Playlists
             </Button>
           </Link>
         </CardContent>

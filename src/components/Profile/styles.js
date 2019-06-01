@@ -7,9 +7,11 @@ const styles = theme => ({
     fontSize: 24,
     textAlign: "center"
   },
-  editButton: {
-    margin: "12px auto 0px auto",
-    backgroundColor: "#2196F3"
+  profileButtons: {
+    marginRight: "6px",
+    "&:hover": {
+      textDecoration: "none"
+    }
   },
   pos: {
     margin: "24px 12px"

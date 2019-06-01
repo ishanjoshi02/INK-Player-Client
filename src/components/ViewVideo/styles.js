@@ -9,7 +9,8 @@ const styles = {
     float: "right"
   },
   buttonPos: {
-    marginTop: "12px"
+    marginTop: "12px",
+    marginRight: "12px"
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
